@@ -1,21 +1,22 @@
 package br.com.dio.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static br.com.dio.service.EventEnum.CLEAR_SPACE;
-
 public class NotifierService {
 
-    private final Map<EventEnum, List<EventListener>> listeners = new HashMap<>(){{
-        put(CLEAR_SPACE, new ArrayList<>());
-    }};
+    private final Map<EventEnum, List<EventListener>> listeners = new EnumMap<>(EventEnum.class);
 
-    public void subscribe(final EventEnum eventType, EventListener listener){
-        var selectedListeners = listeners.get(eventType);
-        selectedListeners.add(listener);
+    public NotifierService() {
+        for (var event : EventEnum.values()) {
+            listeners.put(event, new ArrayList<>());
+        }
+    }
+
+    public void subscribe(final EventEnum eventType, final EventListener listener){
+        listeners.get(eventType).add(listener);
     }
 
     public void notify(final EventEnum eventType){
